@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python
 
 '''
 Author: Ronald Adomako
@@ -132,16 +132,16 @@ def nycl():
     return
 
 def main():
-    geo_file =  'hdfs:///data/share/bdm/nyc_cscl.csv '
+    geo_file =  'nyc_cscl.csv'
     sc = SparkContext()
     sqlContext = SQLContext(sc)
-    directory = 'hdfs:///data/share/bdm/nyc_parking_violation/'
+    directory = 'nyc_parking_violation/'
     
     labels=('ID','Full Street','st label','borocode','LL_HN','LH_HN','RL_HN','RH_HN')
     centerLine = sc.textFile(geo_file).mapPartitionsWithIndex(parseCL,labels)
     print(f'\n\n\nYou have {centerLine.count()} in your CenterLine data\n\n\n')
     CL_frame = sqlContext.createDataFrame(centerLine,labels)
-    
+
     rows = sc.textFile(directory+'Parking_Violations_Issued_201[5-9]_simplified.csv').mapPartitionsWithIndex(parseCSV)
     tkts_Frame = sqlContext.createDataFrame(rows,('House Number','HN Compound','Street Name', 'County','Year'))
     

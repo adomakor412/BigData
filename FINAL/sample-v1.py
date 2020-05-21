@@ -104,7 +104,7 @@ def parseCSV(idx,part):
             yield row
             
 def save(rdd,outFolder):
-    rdd.saveAsText(outFolder)
+    rdd.saveAsTextFile(outFolder)
     return
 
 def main():

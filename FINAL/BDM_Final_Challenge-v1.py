@@ -50,7 +50,7 @@ def parseCL(idx,part):
         row = (ID, full_st, st_label, borocode, 
               LL_HN, RH_HN, symm )
         
-        yield row
+        yield (row)
         
 def parseCSV(idx,part):  
     county = {
@@ -101,10 +101,10 @@ def parseCSV(idx,part):
         row = (HN,HNC,SN,CN,year)
         
         if year in years:
-            yield row
+            yield (row)
             
 def save(rdd,outFolder):
-    rdd.saveAsText(outFolder)
+    rdd.saveAsTextFile(outFolder)
     return
 
 def main():

@@ -113,8 +113,7 @@ def main():
     sqlContext = SQLContext(sc)
     directory = 'hdfs:///data/share/bdm/nyc_parking_violation/'
     
-    rows = sc.textFile(directory + '201[5-9].csv')\
-        .mapPartitionsWithIndex(parseCSV)
+    rows = sc.textFile(directory + '201[5-9].csv').mapPartitionsWithIndex(parseCSV)
     tkts_Frame = sqlContext.createDataFrame(rows,('House Number','Symm_tkt','Street Name', 'County','Year'))
    
     labels=('ID','Full Street','st label','borocode','Low','High','Symm_CL')
@@ -124,7 +123,7 @@ def main():
     print(f'\n\n\nYou have {centerLine.count()} in your CenterLine data\n\n\n')
   
     tkts_Frame = tkts_Frame.withColumn('House Number',tkts_Frame['House Number'].cast('int'))
-    #CL_frame = CL_frame.withColumn('ID',CL_frame['ID'].cast('int'))
+    CL_frame = CL_frame.withColumn('ID',CL_frame['ID'].cast('int'))
     CL_frame = CL_frame.withColumn('Low',CL_frame['Low'].cast('int'))
     CL_frame = CL_frame.withColumn('High',CL_frame['High'].cast('int'))
     
@@ -145,10 +144,12 @@ def main():
     group = df_match.groupby(['ID',"Year"]).count()
     counted = group.groupby(['ID']).pivot('Year').sum()
     counted = counted.na.fill(0)
-    counted = counted.sort('ID')#.show(False)
+    counted = counted.sort('ID')
     
     headers = ('ID','2015','2016','2017','2018','2019','COEF')
-    new_rdd = counted.rdd.map(lambda row: (row[0], row[1], row[2], row[3], row[4],row[5],\
+    
+    counted = counted.rdd
+    new_rdd = counted.map(lambda row: (row[0], row[1], row[2], row[3], row[4],row[5],\
                                       sm.OLS(row[1:6], list(range(5))).fit().params[0]),headers)
     
     save(new_rdd,sys.argv[1])

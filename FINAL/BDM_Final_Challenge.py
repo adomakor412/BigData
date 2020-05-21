@@ -138,7 +138,7 @@ def main():
     directory = 'hdfs:///data/share/bdm/nyc_parking_violation/'
     
     labels=('ID','Full Street','st label','borocode','LL_HN','LH_HN','RL_HN','RH_HN')
-    centerLine = sc.textFile(geo_file).mapPartitionsWithIndex(parseCL,labels)
+    centerLine = sc.textFile(geo_file).mapPartitionsWithIndex(parseCL)
     print(f'\n\n\nYou have {centerLine.count()} in your CenterLine data\n\n\n')
     CL_frame = sqlContext.createDataFrame(centerLine,labels)
     

@@ -108,12 +108,12 @@ def save(rdd,outFolder):
     return
 
 def main():
-    geo_file =  '/data/share/bdm/nyc_cscl.csv'
+    geo_file =  'nyc_cscl.csv'
     sc = SparkContext()
     sqlContext = SQLContext(sc)
-    directory = '/data/share/bdm/nyc_parking_violation/'
+    directory = 'nyc_parking_violation/'
     
-    rows = sc.textFile(directory + '201[5-9].csv')\
+    rows = sc.textFile(directory + 'Parking_Violations_Issued_201[5-9]_simplified.csv')\
         .mapPartitionsWithIndex(parseCSV)
     tkts_Frame = sqlContext.createDataFrame(rows,('House Number','Symm_tkt','Street Name', 'County','Year'))
    

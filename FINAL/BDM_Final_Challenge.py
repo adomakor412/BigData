@@ -142,7 +142,7 @@ def main():
     print(f'\n\n\nYou have {centerLine.count()} in your CenterLine data\n\n\n')
     CL_frame = sqlContext.createDataFrame(centerLine,labels)
     
-    rows = sc.textFile(directory+'Parking_Violations_Issued_201[5-9]_simplified.csv').mapPartitionsWithIndex(parseCSV)
+    rows = sc.textFile(directory+'201[5-9].csv').mapPartitionsWithIndex(parseCSV)
     tkts_Frame = sqlContext.createDataFrame(rows,('House Number','HN Compound','Street Name', 'County','Year'))
     
     tkts_Frame = tkts_Frame.withColumn('House Number',tkts_Frame['House Number'].cast('int'))
